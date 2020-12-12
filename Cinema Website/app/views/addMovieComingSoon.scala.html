@@ -1,0 +1,49 @@
+@(itemForm: Form[models.products.ComingSoonMovie],user: models.users.User)
+
+@import helper._
+
+@main("Add movie",user){
+    <style>
+        
+        .col-sm-3{text-decoration-color: white;}
+        .col-sm-9{text-decoration-color: white;}
+        .table{background-color: white;}
+        
+    </style>
+    <p class="lead">Add a new movie</p>
+
+    @form(action=routes.HomeController.addMovieComingSoonSubmit(), 'class -> "form-horizontal", 'role -> "form",
+           'method -> "POST", 'enctype -> "multipart/form-data") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+
+            @inputText(itemForm("Title"), '_label -> "Title", 'class -> "form-control")
+            <p><strong>Categories</strong></p>
+            @for((value, title) <- products.Category1.options) {
+                <input type="checkbox" Title="catSelect[]" value="@value"  
+                    @if(itemForm("id").getValue.isPresent && itemForm("id").getValue.get != "") { 
+                        @if(products.Category1.inCategory1(value.toLong, itemForm("id").getValue.get.toLong)) {
+                            checked
+                        }
+                    } 
+                /> @title </br>
+                }
+                <p></p>
+            @inputText(itemForm("description"), '_label -> "Description", 'class -> "form-control")
+            
+
+            <label>Image Upload</label>
+            <input class="btn-sm btn-default" type="file" name="upload">
+
+            @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+
+            <div class="actions">
+                <input type="submit" value="Add/Update Movie" class="btn btn-primary">
+                <a href="@routes.HomeController.ComingSoon(0)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+    } @* end of form *@
+} @* end of main *@

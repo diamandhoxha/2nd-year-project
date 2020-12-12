@@ -1,0 +1,76 @@
+@(users: List[models.users.Administrator],user: models.users.User)
+@main("Administrator",user){
+
+
+    <style>
+        
+        .col-sm-3{text-decoration-color: white;}
+        .col-sm-9{text-decoration-color: white;}
+        .table{background-color: white;}
+        .header{color:white;}
+        .textabovetable{color:white;}
+        .admnintable tr:hover{background-color: grey;}
+        .admnintable th{background-color:rgb(255, 117, 26);color:white; padding-top: 4px; padding-bottom: 4px; text-align: left;}
+        .admnintable td, .admnintable th{border:1px solid #ddd; padding: 8px;}
+        .admnintable{background-color: white;width:100%;}
+    </style>
+
+    <h1 class = "header">Current Administrators</h1>
+
+
+    @* Display successful new user message from flash, if it is set *@
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		</div>
+}
+
+    <div class="col-sm-9">
+        <h4 class = "textabovetable">Here are all the current admins on the system</h4>
+        <table class="admnintable">
+            <thead>
+        <!-- The header row-->
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Name</th>
+            <th>Date Of Birth</th>
+            <th>Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Product row(s) -->
+       
+            @* Loop for creating table rows from User data *@
+            @for(u<-users) {
+               <tr>
+                  <td>@u.getEmail</td>
+                  <td>@u.getRole</td>
+                  <td>@u.getName</td>
+                  <td>@u.getDateOfBirthString</td>
+                  <td>@u.getPassword</td>
+                  <!-- Update button -->
+						<td>
+							<a href="@routes.HomeController.updateAdmin(u.getEmail)" class="button-xs btn-danger">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+                        </td>
+                  <!-- Delete button -->
+						<td>
+							<a href="@routes.HomeController.deleteAdmin(u.getEmail)" class="button-xs btn-danger" onclick="return confirmDel();">
+								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+                        </td>
+               </tr>
+            }
+        
+        </tbody>
+    </table>
+
+    <p>
+        <a href="@routes.HomeController.addAdmin()">
+            <button class="btn btn-primary">Add a new Administrator</button>
+        </a>
+    </p>
+</div>
+ }

@@ -1,0 +1,52 @@
+@(itemForm: Form[models.products.Food],user: models.users.User)
+
+@import helper._
+@import models.products.Category2;
+
+@main("Add Food",user){
+<style>
+
+    .col-sm-3 {
+        text-decoration-color: white;
+    }
+
+    .col-sm-9 {
+        text-decoration-color: white;
+    }
+
+    .table {
+        background-color: white;
+    }
+</style>
+<p class="lead">Add a new food</p>
+
+    @form(action=routes.HomeController.addFoodSubmit(), 'class -> "form-horizontal", 'role -> "form",
+           'method -> "POST", 'enctype -> "multipart/form-data") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+
+            @inputText(itemForm("name"), '_label -> "Name", 'class -> "form-control")
+            @select(
+                itemForm("category2.id"),
+                options(Category2.options),
+                '_label -> "Category2", '_default -> "-- Choose a category --", 
+                '_showConstraints -> false, 'class -> "form-control"
+            )
+            @inputText(itemForm("size"), '_label -> "size", 'class -> "form-control")
+            @inputText(itemForm("price"), '_label -> "Price", 'class -> "form-control")
+
+            <label>Image Upload</label>
+            <input class="btn-sm btn-default" type="file" name="upload">
+
+            @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+
+            <div class="actions">
+                <input type="submit" value="Add/Update food" class="btn btn-primary">
+                <a href="@routes.HomeController.food(0)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+    } @* end of form *@
+} @* end of main *@

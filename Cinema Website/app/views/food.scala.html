@@ -1,0 +1,165 @@
+@(items: List[models.products.Food],categories: List[models.products.Category2],user: models.users.User, env: play.api.Environment)
+@main("food", user){
+
+    <style>
+
+.btn {
+	-moz-box-shadow: 1px -1px 28px -2px #ff7700;
+	-webkit-box-shadow: 1px -1px 28px -2px #ff7700;
+	box-shadow: 1px -1px 28px -2px #ff7700;
+	background-color:#000000;
+	-moz-border-radius:42px;
+	-webkit-border-radius:42px;
+	border-radius:42px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Trebuchet MS;
+	font-size:17px;
+	padding:3px 8px;
+	text-decoration:none;
+}
+.btn:hover {
+	background-color:#ff771d;
+}
+.btn:active {
+	position:relative;
+	top:1px;
+}
+
+        .col-sm-3{text-decoration-color: white; margin-top: 1em;}
+        .col-sm-9{text-decoration-color: white;  margin-top: 1em;}
+        .table{background-color: white;}
+        .header{color:white;}
+        .lefttext{color:white;}
+        .righttext{color:white;}
+        table.foodtable {
+        font-family: "Arial Black", Gadget, sans-serif;
+        border: 3px solid #FF3507;
+        background-color: #000000;
+        width: 900px;
+        text-align: center;
+        }
+        table.foodtable td, table.foodtable th {
+        border: 1px solid #FF751A;
+        padding: 0px 10px;
+        }
+        table.foodtable tbody td {
+        font-size: 12px;
+        font-weight: bold;
+        color: #FFFFFF;
+        }
+        table.foodtable thead {
+        background: #FF751A;
+        }
+        table.foodtable td:nth-child(even) {
+        background: #323232;
+        }
+        table.foodtable thead th {
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-align: center;
+        }        
+
+    </style>
+
+
+    <h1 class = "header">Food Menu</h1>
+
+
+    @* Display successful new product message from flash, if it is set *@
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		</div>
+}
+
+
+   
+
+
+    <div class="col-sm-3">
+		<h4 class = "lefttext">Categories</h4>
+	        <ul class="list-group">
+                    <a href = "@routes.HomeController.food(0)" class="list-group-item">All Categories</a>
+		        @for(c<-categories) {
+			        <a href = "@routes.HomeController.food(c.getId())" class="list-group-item catheight">@c.getName
+                        <span class="badge">@c.getItems.size</span> 
+                    </a>
+			    }
+            </ul>
+    </div>
+
+
+    
+
+    <div class="col-sm-9">
+        <h4 class = "righttext">all food here</h4>
+        <table class="foodtable">
+            <thead>
+        <!-- The header row-->
+        <tr>
+            <th>image</th>
+            <th>ID</th>
+            <th>name</th>
+            <th>size</th>
+            <th>price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Product row(s) -->
+       
+            @* Loop for creating table rows from food data *@
+            @for(i<-items) {
+               <tr>
+                    @if(env.resource("public/images/productImages/" + i.getId + "thumb.jpg").isDefined) {
+                        <td><img src="/assets/images/productImages/@(i.getId + "thumb.jpg")"/></td>
+                    } else {
+                        <td><img src="/assets/images/productImages/noImage.jpg"/></td>
+                    }
+                <td>@i.getId</td>
+                  <td>@i.getName</td>
+                  <td>@i.getSize</td>
+                  <td>&euro; @("%.2f".format(i.getPrice))</td>
+
+                  
+                  
+                  @if((user != null) && ("admin".equals(user.getRole()))) {
+                  <!-- Update button -->
+						<td>
+							<a href="@routes.HomeController.updateFood(i.getId)" class="button-xs btn-danger">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+                </td>
+                  <!-- Delete button -->
+						<td>
+							<a href="@routes.HomeController.deleteFood(i.getId)" class="button-xs btn-danger" onclick="return confirmDel();">
+								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+                </td>
+                }
+                @if((user != null) && ("customer".equals(user.getRole()))) {
+                    <td><a href="@routes.ShoppingCtrl.addToBasket(i.getId)" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span></a></td>
+              }
+               </tr>
+              
+            }
+            
+        
+        </tbody>
+    </table>
+    @if((user != null) && ("admin".equals(user.getRole()))) {
+    <p>
+        <a href="@routes.HomeController.addFood()">
+            <button class="btn">Add food</button>
+        </a>
+    </p>
+    }
+
+
+
+
+</div>
+
+ }

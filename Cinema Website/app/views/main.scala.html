@@ -1,0 +1,80 @@
+@(pagename:String,user: models.users.User)(content:Html)
+<!DOCTYPE html>
+<html>
+    <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style>
+	    html, body{background-color:black;}
+	    .footer { font-weight: bold; color: white; background-color:rgb(255, 117, 26); }
+	    .sidecol { font-weight: bold; background-color: steelblue; }
+	    .sidecol h2 { font-weight: bold; }
+	    .midcol h1 { text-align: center; font-weight: bold; }
+	    .midcol h3 { text-align: center; color: steelblue; }
+	    .redtext { color: red; }
+		.navbar {font-weight: bold; color: black; background-color: rgb(255, 117, 26);}
+		.navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus{background-color: black; color:white;}
+
+	</style>
+	<title>OFM @pagename</title>
+    </head>
+    <body>
+	<nav class="navbar navbar-inverse">
+	    <div class="container-fluid">
+		<div class="navbar-header">
+		    <a class="navbar-brand" href="#">BDCM Cinema</a>
+		</div>
+		<ul class="nav navbar-nav">
+			<li @if(pagename == "Home") {class="active"}><a href="@routes.HomeController.index()">Home</a></li>
+			<li @if(pagename == "Movies") {class="active"}><a href="@routes.HomeController.showMovies()"> Movies</a></li>
+			<li @if(pagename == "Coming Soon") {class="active"}><a href="@routes.HomeController.showComingSoon()">Coming Soon</a></li>
+			<li @if(pagename == "food") {class="active"}><a href="@routes.HomeController.food()">Food</a></li>
+			<li @if(pagename == "Merchandise") {class="active"}><a href="@routes.HomeController.Merchandise()">Merchandise</a></li>
+			@if((user != null) && ("admin".equals(user.getRole()))) {
+				<li @if(pagename == "Administrators") {class="active"}><a href="@routes.HomeController.usersAdmin()">View Admin</a></li>
+				<li @if(pagename == "Customers") {class="active"}><a href="@routes.HomeController.usersCustomer()">View Customers</a></li>
+				<li @if(pagename == "Coming Soon") {class="active"}><a href="@routes.HomeController.ComingSoon()">view Coming Soon</a></li>
+				<li @if(pagename == "Movies") {class="active"}><a href="@routes.HomeController.Movies()">view Movies</a></li>
+			}
+			@if((user != null) && ("customer".equals(user.getRole()))) {
+				<li @if(pagename == "Orders") {class="active"}><a href="@routes.ShoppingCtrl.ViewShowingOrders">View Showing Orders</a></li>
+				}
+		</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li @if(pagename == "Register") {class="active"}><a href="@routes.HomeController.registerUser()">Register user</a></li>
+			<li @if(pagename == "Log In") {class="active"}>
+				@if(user != null) {
+					<a href="@routes.LoginController.logout()">Log Out</a>
+				} else {
+					<a href="@routes.LoginController.login()">Log In</a>
+			</li>
+				} 
+
+		</ul>
+	    </div>
+	</nav>
+
+	<div class="container-fluid">
+	    <div class="row">
+				    
+		</div>
+		<div class="col-sm-12">
+		    <div class="midcol">
+                @content
+		    </div>
+		</div>
+			
+	    </div>
+	    <div class="row">
+		<div class="col-sm-12">
+		    <div class="well footer">
+				BDCM Cinema
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<script src ="@routes.Assets.versioned("javascripts/main.js")"></script>
+    </body>
+</html>
+

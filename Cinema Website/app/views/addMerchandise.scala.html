@@ -1,0 +1,36 @@
+@(itemForm: Form[models.products.MerchandiseOnSale],user: models.users.User)
+
+
+@import helper._
+@import models.products.Category3;
+
+@main("Add Merchandise",user){
+    <p class="lead">Add a new item</p>
+
+   @form(action=routes.HomeController.addMerchandiseSubmit(), 'class -> "form-horizontal", 'role -> "form") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+        
+            @inputText(itemForm("name"), '_label -> "Name", 'class -> "form-control")
+            @select(
+                itemForm("category3.id"),
+                options(Category3.options),
+                '_label -> "Category", '_default -> "-- Choose a category --", 
+                '_showConstraints -> false, 'class -> "form-control"
+            )
+            @inputText(itemForm("stock"), '_label -> "Stock", 'class -> "form-control")
+            @inputText(itemForm("price"), '_label -> "Price", 'class -> "form-control")
+
+            @inputText(itemForm("id"), '_label -> "", 'hidden -> "hidden")
+            
+            
+            <div class="actions">
+                <input type="submit" value="Add/Update item" class="btn btn-primary">
+                <a href="@routes.HomeController.Merchandise(0)">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+    } @* end of form *@
+} @* end of main *@

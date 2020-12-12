@@ -1,0 +1,52 @@
+@(userForm: Form[models.users.Customer],user: models.users.User)
+
+@import helper._
+
+@main("Register Customer",user){
+
+
+    <style>
+        
+        .col-sm-3{text-decoration-color: white;}
+        .col-sm-9{text-decoration-color: white;}
+        .table{background-color: white;}
+        .lead{color: white;}
+        .form{color: white;}
+    </style>
+
+
+    <p class="lead">Add a new user</p>
+
+    @* Display error message from flash, if it is set *@
+	@if(flash.containsKey("error")) {
+		<div class="alert alert-success">
+			@flash.get("error")
+		</div>
+	}
+<div class = "form">
+    @form(action=routes.HomeController.registerUserSubmit(), 'class -> "form-horizontal", 'role -> "form") {
+        @* CSRF attack prevention *@
+        @* This token, sent by the controller, will be used to authenticate the form submission *@
+        @CSRF.formField
+
+            @inputText(userForm("email"), '_label -> "Email", 'class -> "form-control")
+            @inputText(userForm("name"), '_label -> "Name", 'class -> "form-control")
+            @inputDate(userForm("dateOfBirth"), args = 'size -> 10, '_label -> "Date Of Birth", 'class -> "form-control")
+            @inputText(userForm("password"), '_label -> "Password", 'class -> "form-control")
+            @inputText(userForm("street1").copy(value=Some("null")), '_label -> "",'hidden -> "hidden")
+            @inputText(userForm("street2").copy(value=Some("null")), '_label -> "",'hidden -> "hidden")
+            @inputText(userForm("town").copy(value=Some("null")), '_label -> "",'hidden -> "hidden")
+            @inputText(userForm("postCode").copy(value=Some("null")), '_label -> "",'hidden -> "hidden")
+
+            @inputText(userForm("role").copy(value=Some("customer")), '_label -> "",'hidden -> "hidden")
+            @inputText(userForm("email"), '_label -> "", 'hidden -> "hidden")
+
+            <div class="actions">
+                <input type="submit" value="Register user" class="btn btn-primary">
+                <a href="@routes.HomeController.registerUser()">
+                    <button type="button" class="btn btn-warning">Cancel</button>
+                </a>
+            </div>
+        </div>
+    } @* end of form *@
+} @* end of main *@

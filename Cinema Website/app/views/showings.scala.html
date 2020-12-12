@@ -1,0 +1,67 @@
+@(showing: List[models.products.Showing], movie: models.products.Movie,user: models.users.User)
+@main("Showings",user){
+    <style>
+            .showingTable tr:hover{background-color: grey;}
+           .showingTable th{background-color:rgb(255, 117, 26);color:white; padding-top: 4px; padding-bottom: 4px; text-align: left;}
+           .showingTable td, .showingTable th{border:1px solid #ddd; padding: 8px;}
+           .showingTable {background-color: white;width:100%;margin-bottom: 2em;}
+           .title {color: white;}
+       </style>
+       <div class = "title">
+    <h1>Showings</h1>
+   </div>
+    <table class="showingTable">
+         <thead>
+               <!-- The header row-->
+               <tr>
+                   <th>ID</th>
+                   <th>Movie</th>
+                   <th>Date</th>
+                   <th>time</th>
+                   <th>tickets</th>
+                   <th>Price</th>
+               </tr>
+               </thead>
+        <tbody>
+            @* Loop for creating table rows from ItemOnSale data *@
+            @for(i<-showing) {
+               <tr>
+                  <td>@i.getId</td>
+                  <td>@i.getMovie.getTitle</td>
+                  <td>@i.getDateString</td>
+                  <td>@("%.2f".format(i.getTime))</td>
+                  <td>@i.getTickets</td>
+                  <td>&euro; @("%.2f".format(i.getPrice))</td>
+                  @if((user != null) && ("admin".equals(user.getRole()))) {
+                  <td>
+                        <a href="@routes.HomeController.updateShowing(i.getId)" class="button-xs btn-danger">
+                           <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                   </td>
+                     <!-- Delete button -->
+                     <td>
+                        <a href="@routes.HomeController.deleteShowing(i.getId)" class="button-xs btn-danger" onclick="return confirmDel();">
+                           <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                   </td>
+                  }
+                  @if((user != null) && ("customer".equals(user.getRole()))) {
+                     @if(i.getTickets() >0){
+                     <td><a href="@routes.ShoppingCtrl.addToBasket(i.getId)" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span></a></td>
+                     }else{
+                        <td><img src="/assets/images/oos.jpg"/></td>
+                     }
+                  }
+               </tr>
+               
+            }
+         </tbody>
+    </table>
+    @if((user != null) && ("admin".equals(user.getRole()))) {
+    <p>
+         <a href="@routes.HomeController.addShowing()">
+             <button class="btn btn-primary">Add an showing</button>
+         </a>
+ </p>
+}
+ }

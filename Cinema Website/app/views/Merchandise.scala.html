@@ -1,0 +1,84 @@
+@(items: List[models.products.MerchandiseOnSale],categories: List[models.products.Category3],user: models.users.User)
+@main("Merchandise",user){
+    <style>
+         .mercnadiseTable tr:hover{background-color: grey;}
+        .mercnadiseTable th{background-color:rgb(255, 117, 26);color:white; padding-top: 4px; padding-bottom: 4px; text-align: left;}
+        .mercnadiseTable td, .mercnadiseTable th{border:1px solid #ddd; padding: 8px;}
+        .mercnadiseTable{background-color: white;width:100%;margin-bottom: 2em;}
+        .col-sm-3 {color: white;}
+        .merch {color: white;}
+    </style>
+    <div class = "merch">
+    <h1>Merchandise</h1>
+    </div>
+
+    @* Display successful new product message from flash, if it is set *@
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		</div>
+}
+    <div class="col-sm-3">
+		<h4>Categories</h4>
+	        <ul class="list-group">
+                    <a href = "@routes.HomeController.Merchandise(0)" class="list-group-item">All Categories</a>
+		        @for(c<-categories) {
+			        <a href = "@routes.HomeController.Merchandise(c.getId())" class="list-group-item catheight">@c.getName
+                        <span class="badge">@c.getMerchandise.size</span> 
+                    </a>
+			    }
+            </ul>
+    </div>
+    
+    <div class="col-sm-9">
+        
+        <table class="mercnadiseTable">
+            <thead>
+        <!-- The header row-->
+        <tr>
+            <th>ID</th>
+            <th>Name Picture</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Product row(s) -->
+       
+            @* Loop for creating table rows from MerchandiseOnSale data *@
+            @for(i<-items) {
+               <tr>
+                  <td>@i.getId</td>
+                  <td>@i.getName</td>
+                  <td>@i.getCategory3.getName</td>
+                  <td>@i.getStock</td>
+                  <td>&euro; @("%.2f".format(i.getPrice))</td>
+                  @if((user != null) && ("admin".equals(user.getRole()))) {
+                  <!-- Update button -->
+						<td>
+							<a href="@routes.HomeController.updateMerchandise(i.getId)" class="button-xs btn-danger">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+                </td>
+                  <!-- Delete button -->
+						<td>
+							<a href="@routes.HomeController.deleteMerchandise(i.getId)" class="button-xs btn-danger" onclick="return confirmDel();">
+								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+                </td>
+            }
+               </tr>
+            }
+        
+        </tbody>
+    </table>
+    @if((user != null) && ("admin".equals(user.getRole()))) {
+    <p>
+        <a href="@routes.HomeController.addMerchandise()">
+            <button class="btn btn-primary">Add an item</button>
+        </a>
+</p>
+    }
+</div>
+ }

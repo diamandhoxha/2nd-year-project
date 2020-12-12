@@ -1,0 +1,79 @@
+@(items: List[models.products.ComingSoonMovie],categories: List[models.products.Category1],user: models.users.User, env: play.api.Environment)
+@main("Register User",user){
+
+    <style>
+    .movies {height: 50%;width:70%; text-align: center; margin-left: 15%;margin-top: 15%;margin-bottom: 4em;}
+    .col-sm-2{margin-bottom: 5%;}
+    html,body {
+	margin: 0;
+	padding: 0;
+}
+.header{color: white;}
+.slider {
+	width: 100%;
+	
+	
+}
+
+.movies img {
+  border-radius: 8px;
+  padding: 5px;
+  width: 190px;
+  height: 270px;
+}
+.movies img:hover {
+  box-shadow: 0 0 2px 1px lightblue;
+}
+
+.slider-wrapper {
+	width: 100%;
+	height: 400px;
+	position: relative;
+}
+
+.slide {
+	float: left;
+	position: absolute;
+	width: 100%;
+	height: 150%;
+	opacity: 0;
+	transition: opacity 3s linear;
+}
+
+.slider-wrapper > .slide:first-child {
+	opacity: 1;
+}
+    </style>
+
+
+    <h1 class = "header">Movies Coming Soon</h1>
+
+    
+
+
+<div class="slider" id="main-slider"><!-- outermost container element -->
+    <div class="slider-wrapper"><!-- innermost wrapper element -->
+        <img src="@routes.Assets.at("images/productImages/Avenger-Endgame-Banner.jpg")" alt="First" class="slide" />
+        <img src="@routes.Assets.at("images/productImages/wonderpark.jpg")" alt="Second" class="slide" />
+        <img src="@routes.Assets.at("images/productImages/wonder-woman-banner-2.jpg")" alt="Third" class="slide" />
+    </div>
+   
+    <div class = "movies">
+    @for(i<-items) {
+        @if(env.resource("public/images/productImages/" + i.getId + ".jpg").isDefined) {
+            
+            <div class="col-sm-2">
+                <td><a href="@routes.HomeController.infoComingSoon(i.getId)"><img src="/assets/images/productImages/@(i.getId).jpg"/></td>
+                
+                </div>
+                
+        } else {
+            <td><img src="/assets/images/productImages/noImage.jpg"/></td>
+        }
+
+    
+  }
+
+</div>
+
+}

@@ -1,0 +1,61 @@
+@(items: List[models.products.Movie],categories: List[models.products.Category],catId: Long, filter: String,user: models.users.User, env: play.api.Environment)
+@main("Register User",user){
+
+    <style>
+    .header {color: white;}
+    .moviesHere {height: 50%;width:70%; text-align: center; margin-left: 15%;margin-top:4em;margin-bottom: 4em;}
+    .col-sm-2{margin-bottom: 5%;}
+    html,body {
+	margin: 0;
+	padding: 0;
+}
+.slider {
+	width: 100%;
+}
+
+.moviesHere img {
+  border-radius: 8px;
+  padding: 5px;
+  width: 190px;
+  height: 270px;
+}
+.moviesHere img:hover {
+  box-shadow: 0 0 2px 1px lightblue;
+}
+.search{
+  float:right;
+  margin-right: 20.8em;
+}
+
+    </style>
+
+
+    <h1 class = "header">Movies</h1>
+
+<div class = "search">
+   <div id = "actions">
+     <form action="@routes.HomeController.showMovies(catId)" method="GET">
+       <input type="search" id="searchbox" name="filter" value="@filter" placeholder="Search Movie">
+       <input type="submit" id="searchsubmit" value="Search" class="btn-md btn-primary">
+     </form>
+   </div>
+</div>
+    <div class = "moviesHere">
+    @for(i<-items) {
+        @if(env.resource("public/images/productImages/" + i.getId + ".jpg").isDefined) {
+            
+            <div class="col-sm-2">
+                <td><a href="@routes.HomeController.info(i.getId)"><img src="/assets/images/productImages/@(i.getId).jpg"/></td>
+                
+                </div>
+                
+        } else {
+            <td><img src="/assets/images/productImages/noImage.jpg"/></td>
+        }
+
+    
+  }
+
+</div>
+
+}

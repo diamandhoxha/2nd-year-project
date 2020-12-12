@@ -1,0 +1,32 @@
+@(item: models.products.ComingSoonMovie,user: models.users.User, env: play.api.Environment)
+@main("InfoComingSoon",user){
+<style>
+    .body{color:white;}
+    .description{color:white;}
+    .moviename{color:white;}
+    .picture img {
+        border-radius: 8px;
+        padding: 5px;
+        width: 190px;
+        height: 270px;
+    }
+
+</style>
+<body>
+    <h1 class="moviename">@item.getTitle</h1>
+
+    <div class = "picture">
+<div class = "col-sm-4">
+
+       
+       <img class="enlarge" src="/assets/images/productImages/@(item.getId + ".jpg")"/>
+    
+</div>
+</div>
+
+    <div class = "col-sm-8">
+    <p class="description">@item.getDescription</p>
+</div>
+
+</body>
+}

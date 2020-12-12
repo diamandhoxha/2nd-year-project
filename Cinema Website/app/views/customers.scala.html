@@ -1,0 +1,86 @@
+@(customers: List[models.users.Customer],user: models.users.User)
+@main("Customers",user){
+
+    <style>
+        
+        .col-sm-3{text-decoration-color: white;}
+        .col-sm-9{text-decoration-color: white;}
+        .table{background-color: white;}
+        .header{color:white;}
+        .textabovetable{color:white;}
+        .righttext{color:white;}
+        .customertable tr:hover{background-color: grey;}
+        .customertable th{background-color:rgb(255, 117, 26);color:white; padding-top: 4px; padding-bottom: 4px; text-align: left;}
+        .customertable td, .customertableble th{border:1px solid #ddd; padding: 8px;}
+        .customertable{background-color: white;width:100%;}
+    </style>
+
+    <h1 class = "header">Current customers</h1>
+
+
+    @* Display successful new user message from flash, if it is set *@
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		</div>
+}
+
+    <div class="col-sm-9">
+        <h4 class = "textabovetable">Here are all the current customers on the system.</h4>
+        <table class="customertable">
+            <thead>
+        <!-- The header row-->
+        <tr>
+            <th>Email</th>
+            <th>Role </th>
+            <th>Name</th>
+            <th>Date Of Birth</th>
+            <th>Password</th>
+            <th>Street 1</th>
+            <th>Street 2</th>
+            <th>Town</th>
+            <th>Postcode</th>
+            
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Product row(s) -->
+       
+            @* Loop for creating table rows from User data *@
+            @for(c<-customers) {
+               <tr>
+                  <td>@c.getEmail</td>
+                  <td>@c.getRole</td>
+                  <td>@c.getName</td>
+                  <td>@c.getDateOfBirthString</td>
+                  <td>@c.getPassword</td>
+                  <td>@c.getStreet1</td>
+                  <td>@c.getStreet2</td>
+                  <td>@c.getTown</td>
+                  <td>@c.getPostCode</td>
+                  
+                  <!-- Update button -->
+						<td>
+							<a href="@routes.HomeController.updateCustomer(c.getEmail)" class="button-xs btn-danger">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+                        </td>
+                  <!-- Delete button -->
+						<td>
+							<a href="@routes.HomeController.deleteCustomer(c.getEmail)" class="button-xs btn-danger" onclick="return confirmDel();">
+								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+                        </td>
+               </tr>
+            }
+        
+        </tbody>
+    </table>
+
+    <p>
+        <a href="@routes.HomeController.addCustomer()">
+            <button class="btn btn-primary">Add a new Customer</button>
+        </a>
+    </p>
+</div>
+ }

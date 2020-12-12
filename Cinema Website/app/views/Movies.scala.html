@@ -1,0 +1,105 @@
+@(items: List[models.products.Movie],categories: List[models.products.Category],user: models.users.User, env: play.api.Environment)
+@main("Register User",user){
+
+    <style>
+        
+        .col-sm-3{text-decoration-color: white;}
+        .col-sm-9{text-decoration-color: white;}
+        .table{background-color: white;}
+        .header{color:white;}
+        .lefttext{color:white;}
+        .righttext{color:white;}
+        .movietable tr:hover{background-color: grey;}
+        .movietable th{background-color:rgb(255, 117, 26);color:white; padding-top: 4px; padding-bottom: 4px; text-align: left;}
+        .movietable td, .movietable th{border:1px solid #ddd; padding: 8px;}
+        .movietable{background-color: white;width:100%;}
+        .img {border-radius: 8px;padding: 5px;width: 180px;height: 230px;}
+        img:hover {box-shadow: 0 0 2px 1px lightblue;}
+        img{width: 100px; height: 150px;}
+        
+    </style>
+
+
+    <h1 class = "header">Movies</h1>
+
+
+    @* Display successful new movie message from flash, if it is set *@
+	@if(flash.containsKey("success")) {
+		<div class="alert alert-success">
+			@flash.get("success")
+		</div>
+}
+    <div class="col-sm-3">
+		<h4 class = "lefttext">Categories</h4>
+	        <ul class="list-group">
+                    <a href = "@routes.HomeController.Movies(0)" class="list-group-item">All Categories</a>
+		        @for(c<-categories) {
+			        <a href = "@routes.HomeController.Movies(c.getId())" class="list-group-item catheight">@c.getTitle
+                        <span class="badge">@c.getItems.size</span> 
+                    </a>
+			    }
+            </ul>
+    </div>
+
+    <div class="col-sm-9">
+        <h4 class = "righttext">All Movies Here</h4>
+        <table class="movietable">
+            <thead>
+        <!-- The header row-->
+        <tr>
+            <th>Image</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Screen</th>
+            <th>Seats</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Product row(s) -->
+       
+            @* Loop for creating table rows from Movie data *@
+            @for(i<-items) {
+               <tr>
+                    @if(env.resource("public/images/productImages/" + i.getId + "thumb.jpg").isDefined) {
+                        <td><img src="/assets/images/productImages/@(i.getId + "thumb.jpg")"/></td>
+                    } else {
+                        <td><img src="/assets/images/productImages/noImage.jpg"/></td>
+                    }
+                  <td>@i.getId</td>
+                  <td><a href="@routes.HomeController.showings(i.getId)">@i.getTitle</a> </td>
+                  <td>@i.getDescription</td>
+                  <td>@i.getScreen</td>
+                  <td>@i.getSeats</td>
+                  <td>&euro; @("%.2f".format(i.getPrice))</td>
+                  @if((user != null) && ("admin".equals(user.getRole()))) {
+                  <!-- Update button -->
+						<td>
+							<a href="@routes.HomeController.updateMovie(i.getId)" class="button-xs btn-danger">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+                </td>
+                  <!-- Delete button -->
+						<td>
+							<a href="@routes.HomeController.deleteMovie(i.getId)" class="button-xs btn-danger" onclick="return confirmDel();">
+								<span class="glyphicon glyphicon-trash"></span>
+							</a>
+                </td>
+                }
+               </tr>
+              
+            }
+            
+        
+        </tbody>
+    </table>
+    @if((user != null) && ("admin".equals(user.getRole()))) {
+    <p>
+        <a href="@routes.HomeController.addMovie()">
+            <button class="btn btn-primary">Add a Movie</button>
+        </a>
+    </p>
+    }
+</div>
+ }
